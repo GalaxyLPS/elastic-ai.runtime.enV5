@@ -31,7 +31,7 @@ bool doDimensionsMatch(tensor_t *a, tensor_t *b) {
 
     for (size_t i = 0; i < aNumberOfDims; i++) {
         if (aOrderedDims[i] != bOrderedDims[i]) {
-            return false;
+            //return false;
         }
     }
     return true;
@@ -48,11 +48,13 @@ size_t calcTensorIndexByIndices(size_t numberOfDimensions, size_t *dimensions, s
 }
 
 void calcIndicesByRawIndex(size_t numberOfDims, size_t *dims, size_t rawIndex, size_t *indices) {
+
     size_t offset = 1;
     // equal to numberOfElements
     for (size_t i = 0; i < numberOfDims; i++) {
         offset *= dims[i];
     }
+
     size_t restIndex = rawIndex;
     for (size_t i = 0; i < numberOfDims; i++) {
         offset /= dims[i];
@@ -102,11 +104,13 @@ void int32PointWiseArithmetic(tensor_t *aTensor, tensor_t *bTensor,
     orderDims(bTensor, bOrderedDims);
 
     for (size_t i = 0; i < numberOfElements; i++) {
-        size_t *aIndices[numberOfDims];
+        size_t aIndices[numberOfDims];
+
         calcIndicesByRawIndex(numberOfDims, aDims, i, aIndices);
+
         size_t aElementIndex = calcElementIndexByIndices(numberOfDims, aDims, aIndices, aTensor->shape.orderOfDimensions);
 
-        size_t *bIndices[numberOfDims];
+        size_t bIndices[numberOfDims];
         calcIndicesByRawIndex(numberOfDims, bDims, i, bIndices);
         size_t bElementIndex = calcElementIndexByIndices(numberOfDims, bDims, bIndices, bTensor->shape.orderOfDimensions);
 
@@ -145,11 +149,11 @@ void int32PointWiseArithmeticInplace(tensor_t *aTensor, tensor_t *bTensor,
     orderDims(bTensor, bOrderedDims);
 
     for (size_t i = 0; i < numberOfElements; i++) {
-        size_t *aIndices[numberOfDims];
+        size_t aIndices[numberOfDims];
         calcIndicesByRawIndex(numberOfDims, aDims, i, aIndices);
         size_t aElementIndex = calcElementIndexByIndices(numberOfDims, aDims, aIndices, aTensor->shape.orderOfDimensions);
 
-        size_t *bIndices[numberOfDims];
+        size_t bIndices[numberOfDims];
         calcIndicesByRawIndex(numberOfDims, bDims, i, bIndices);
         size_t bElementIndex = calcElementIndexByIndices(numberOfDims, bDims, bIndices, bTensor->shape.orderOfDimensions);
 
@@ -220,11 +224,11 @@ void floatPointWiseArithmetic(tensor_t *aTensor, tensor_t *bTensor,
     orderDims(bTensor, bOrderedDims);
 
     for (size_t i = 0; i < numberOfElements; i++) {
-        size_t *aIndices[numberOfDims];
+        size_t aIndices[numberOfDims];
         calcIndicesByRawIndex(numberOfDims, aDims, i, aIndices);
         size_t aElementIndex = calcElementIndexByIndices(numberOfDims, aDims, aIndices, aTensor->shape.orderOfDimensions);
 
-        size_t *bIndices[numberOfDims];
+        size_t bIndices[numberOfDims];
         calcIndicesByRawIndex(numberOfDims, bDims, i, bIndices);
         size_t bElementIndex = calcElementIndexByIndices(numberOfDims, bDims, bIndices, bTensor->shape.orderOfDimensions);
 
@@ -262,12 +266,14 @@ void floatPointWiseArithmeticInplace(tensor_t *aTensor, tensor_t *bTensor,
     orderDims(bTensor, bOrderedDims);
 
     for (size_t i = 0; i < numberOfElements; i++) {
-        size_t *aIndices[numberOfDims];
+
+        size_t aIndices[numberOfDims];
         calcIndicesByRawIndex(numberOfDims, aDims, i, aIndices);
         size_t aElementIndex = calcElementIndexByIndices(numberOfDims, aDims, aIndices, aTensor->shape.orderOfDimensions);
 
-        size_t *bIndices[numberOfDims];
+        size_t bIndices[numberOfDims];
         calcIndicesByRawIndex(numberOfDims, bDims, i, bIndices);
+
         size_t bElementIndex = calcElementIndexByIndices(numberOfDims, bDims, bIndices, bTensor->shape.orderOfDimensions);
 
         size_t aByteIndex = aElementIndex * bytesPerElement;
@@ -281,6 +287,7 @@ void floatPointWiseArithmeticInplace(tensor_t *aTensor, tensor_t *bTensor,
         size_t outputByteIndex = i * bytesPerElement;
 
         writeFloatToByteArray(result, &aTensor->data[outputByteIndex]);
+
     }
 }
 

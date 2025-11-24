@@ -18,7 +18,9 @@ void initLinearConfig(linearConfig_t* linearConfig, linearQType_t qType, paramet
 
 
 void linearForwardFloat32(tensor_t *w, tensor_t *b, tensor_t *input, tensor_t *output) {
-    matmulFloat32Tensors(w, input, output);
+    transposeTensor(w, 0, 1);
+    matmulFloat32Tensors(input, w, output);
+    transposeTensor(w, 0, 1);
     addFloat32TensorsInplace(output, b);
 }
 
@@ -64,6 +66,7 @@ void linearForwardAsym(tensor_t *w, tensor_t *b, tensor_t *input, tensor_t *outp
 
 
 void linearForward(void *layerConfig, tensor_t *input, tensor_t *output) {
+
     linearConfig_t *linearConfig = layerConfig;
 
     tensor_t weights;
@@ -305,12 +308,12 @@ void linearBackward(void *config, tensor_t *loss, tensor_t *output, tensor_t *pr
     }
 }
 
-void calcOutputShapeLinear(layer_t *linearLayer, shape_t inputShape, shape_t *outputShape) {
+void calcOutputShapeLinear(layer_t *linearLayer, shape_t *inputShape, shape_t *outputShape) {
     size_t numberOfDims = 2;
     linearConfig_t *linearConfig = linearLayer->layerConfig;
-    parameter_t *bias = linearConfig->bias;
-    outputShape->dimensions[0] = inputShape.dimensions[0];
-    outputShape->dimensions[1] = bias->tensor.shape.dimensions[0];
+    parameter_t *weights = linearConfig->weights;
+    outputShape->dimensions[0] = inputShape->dimensions[0];
+    outputShape->dimensions[1] = weights->tensor.shape.dimensions[0];
     outputShape->numberOfDimensions = numberOfDims;
     setOrderOfDimsForNewTensor(numberOfDims, outputShape->orderOfDimensions);
 }

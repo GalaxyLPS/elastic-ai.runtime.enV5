@@ -141,7 +141,7 @@ void reluBackward(void *config, tensor_t *input, tensor_t *gradOutputFromPreviou
     }
 }
 
-void calcOutputShapeRelu(shape_t *inputShape, shape_t *outputShape) {
+void calcOutputShapeRelu(void *config, shape_t *inputShape, shape_t *outputShape) {
     memcpy(outputShape->dimensions, inputShape->dimensions, inputShape->numberOfDimensions);
     memcpy(outputShape->orderOfDimensions, inputShape->orderOfDimensions, inputShape->numberOfDimensions);
     outputShape->numberOfDimensions = inputShape->numberOfDimensions;
